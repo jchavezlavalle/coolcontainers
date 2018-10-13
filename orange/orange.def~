@@ -1,0 +1,65 @@
+Bootstrap:library
+From: debian:9
+
+%environment
+	
+	#Defined environment variables
+	QT_API=pyqt5
+	export QT_API
+
+%help
+
+	Container running Orange Data mining Framework v3.0 over Anaconda 2 for Debian 9 (stretch)
+	This installation requires and installs Python 3.
+
+%post
+	#Installing all dependencies
+
+	apt-get update && apt-get -y upgrade
+	apt-get -y install \
+	build-essential \
+	wget \
+	bzip2 \
+	ca-certificates \
+	libglib2.0-0 \
+	libxext6 \
+	libsm6 \
+	libxrender1 \
+	git
+
+	rm -rf /var/lib/apt/lists/*
+	apt-get clean
+
+	#Installing Anaconda 2 and Conda 4.5.11
+
+	wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+        /bin/bash Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+  	#Conda configuration of channels from .condarc file
+
+  	conda config --file /.condarc --add channels defaults
+  	conda config --file /.condarc --add channels conda-forge
+  	conda update conda
+
+  	#List installed environments
+  	conda list
+	
+	#Remove dependencies for Python 2.7
+	conda remove cdecimal conda-manager
+
+	#Install Python 3
+	conda create python=3 --name orange3
+
+
+	#Install Orange 3 dependencies
+	conda install -c conda-forge commonmark anyqt=0.0.8 bottleneck chardet=3.0.2 dill docutils joblib=0.9.4 keyring keyrings.alt libgcc-ng=7.2.0 libstdcxx-ng=7.2.0 numpy=1.11.3 pip pyqtgraph=0.10.0 python=3.6 scikit-learn=0.18.1 scipy serverfiles setuptools xlrd
+	
+	
+	#Install Orange 3 environment
+        conda install orange3
+	conda install -c defaults pyqt=5 qt
+
+%runscript
+
+	orange-canvas "$@"
+
