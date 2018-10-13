@@ -1,2 +1,2 @@
 # Cool Singularity containers
-let's just containerize the whole thing..
+Let's just containerize the whole thing using Singularity..
