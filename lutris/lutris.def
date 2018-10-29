@@ -1,0 +1,38 @@
+Bootstrap:library
+From: debian:9
+
+%environment
+
+
+%help
+
+	Lutris container using Singularity!
+
+%post
+
+	apt-get update
+
+	apt-get install -y gnupg wget git python3-pip libsoup-gnome2.4-1
+
+	apt-get update
+
+	echo "deb http://download.opensuse.org/repositories/home:/strycore/Debian_9.0/ ./" >> /etc/apt/sources.list.d/lutris.list
+
+	wget -q https://download.opensuse.org/repositories/home:/strycore/Debian_9.0/Release.key -O- | apt-key add -
+
+	apt-get update
+
+	git clone https://github.com/lutris/lutris.git
+
+	cd /lutris
+
+	apt install -y python-gi python-gi-cairo python3-gi python3-gi-cairo gir1.2-gtk-3.0
+
+	pip install pyyaml
+
+	python3 setup.py install
+
+%runscript
+
+	#Check wine version
+	lutris --version
